@@ -307,15 +307,15 @@ class Document:
         is_first_page_size_fit = cls._is_first_page_size_fit(page_boxes_copy)
         if is_first_page_size_fit:
             disabled_page_break_element = ElementTree.Element("style")
-            disabled_page_break_element.text = "* {break-before: avoid !important; break-after: avoid !important; break-inside: avoid;}"
+            disabled_page_break_element.text = "* {break-before: avoid !important; break-after: avoid !important;}"
             html_etree = html.etree_element
             html_etree_head = html_etree.find("head")
-            if html_etree_head is None:
-                html_etree_head = ElementTree.Element("head")
-                html_etree_head.append(disabled_page_break_element)
-                html_etree.insert(0, html_etree_head)
-            else:
-                html_etree_head.append(disabled_page_break_element)
+            # if html_etree_head is None:
+            #     html_etree_head = ElementTree.Element("head")
+            #     html_etree_head.append(disabled_page_break_element)
+            #     html_etree.insert(0, html_etree_head)
+            # else:
+            html_etree_head.append(disabled_page_break_element)
             # print(html.etree_element.find("head"))
             # html.etree_element.append(disabled_page_break_element)
             print(ElementTree.tostring(html.etree_element))
