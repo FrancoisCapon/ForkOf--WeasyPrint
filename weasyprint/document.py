@@ -307,7 +307,7 @@ class Document:
         is_first_page_size_fit = cls._is_first_page_size_fit(page_boxes_copy)
         if is_first_page_size_fit:
             disabled_page_break_element = ElementTree.Element("style")
-            disabled_page_break_element.text = '* {break-before: avoid !important; break-after: avoid !important; break-inside: avoid;}'
+            disabled_page_break_element.text = "* {break-before: avoid !important; break-after: avoid !important; break-inside: avoid;}"
             html_etree = html.etree_element
             html_etree_head = html_etree.find("head")
             if html_etree_head is None:
@@ -321,6 +321,15 @@ class Document:
             print(ElementTree.tostring(html.etree_element))
             context = cls._build_layout_context(
                 html, font_config, counter_style, color_profiles, options
+            )
+            root_box = build_formatting_structure(
+                html.etree_element,
+                context.style_for,
+                context.get_image_from_uri,
+                html.base_url,
+                context.target_collector,
+                counter_style,
+                context.footnotes,
             )
             page_boxes = layout_document(html, root_box, context)
 
