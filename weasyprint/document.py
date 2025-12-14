@@ -308,6 +308,7 @@ class Document:
         if sum(1 for _ in page_boxes_1) > 1:
             # @page size fit
             if cls._is_first_page_size_fit(page_boxes_2):
+                # disabled page break
                 disabled_page_break_element = ElementTree.Element("style")
                 disabled_page_break_element.text = "* {break-before: avoid !important; break-after: avoid !important;}"
                 html_etree_head =  html.etree_element.find("head")
@@ -327,6 +328,10 @@ class Document:
                     context.footnotes,
                 )
                 page_boxes = layout_document(html, root_box, context)
+                page_boxes, page_boxes_1 = itertools.tee(page_boxes)
+                pages_number = sum(1 for _ in page_boxes_1)
+                if pages_number != 1:
+                     raise ValueError(f"More than one page for page size fit: {pages_number} pages!")
 
         rendering = cls(
             [Page(page_box) for page_box in page_boxes],
