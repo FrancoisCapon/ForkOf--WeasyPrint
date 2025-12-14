@@ -302,28 +302,31 @@ class Document:
         )
 
         page_boxes = layout_document(html, root_box, context)
-        page_boxes, page_boxes_copy = itertools.tee(page_boxes)
-
-        is_first_page_size_fit = cls._is_first_page_size_fit(page_boxes_copy)
-        if is_first_page_size_fit:
-            disabled_page_break_element = ElementTree.Element("style")
-            disabled_page_break_element.text = "* {break-before: avoid !important; break-after: avoid !important;}"
-            html_etree_head =  html.etree_element.find("head")
-            html_etree_head.append(disabled_page_break_element)
-            print(ElementTree.tostring(html.etree_element))
-            context = cls._build_layout_context(
-                html, font_config, counter_style, color_profiles, options
-            )
-            root_box = build_formatting_structure(
-                html.etree_element,
-                context.style_for,
-                context.get_image_from_uri,
-                html.base_url,
-                context.target_collector,
-                counter_style,
-                context.footnotes,
-            )
-            page_boxes = layout_document(html, root_box, context)
+        
+        page_boxes, page_boxes_1, page_boxes_2 = itertools.tee(page_boxes, 3)
+        # pages_number > 1
+        if sum(1 for _ in page_boxes_1) > 1:
+            # @page size fit
+            if cls._is_first_page_size_fit(page_boxes_2):
+                disabled_page_break_element = ElementTree.Element("style")
+                disabled_page_break_element.text = "* {break-before: avoid !important; break-after: avoid !important;}"
+                html_etree_head =  html.etree_element.find("head")
+                html_etree_head.append(disabled_page_break_element)
+                print(ElementTree.tostring(html.etree_element))
+                # again without page break
+                context = cls._build_layout_context(
+                    html, font_config, counter_style, color_profiles, options
+                )
+                root_box = build_formatting_structure(
+                    html.etree_element,
+                    context.style_for,
+                    context.get_image_from_uri,
+                    html.base_url,
+                    context.target_collector,
+                    counter_style,
+                    context.footnotes,
+                )
+                page_boxes = layout_document(html, root_box, context)
 
         rendering = cls(
             [Page(page_box) for page_box in page_boxes],
