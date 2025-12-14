@@ -1949,10 +1949,12 @@ def test_page_size_fit_propertie():
 def test_page_size_fit_no_element():
     pages = render_pages(
       """
+      <meta name="description" content="Weasyprint">
       <style>
       @page { size: fit; }
       * {margin: 0; padding: 0}
       </style>
+      <script>alert('Weasyprint')</script>
       """
     )
     assert len(pages) == 1
