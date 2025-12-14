@@ -118,18 +118,15 @@ PAGE_SIZES = {
     )
 }
 
-# page size fit
-# ~10m x ~10m (must no be a square)
+# @page size: fit
+# ~10m x ~10m (must no be a square!)
 FIT_PAGE_SIZE_WIDTH = 37800
 FIT_PAGE_SIZE_HEIGHT = FIT_PAGE_SIZE_WIDTH + 1
 FIT_PAGE_SIZE_UNIT = "px"
-PAGE_SIZES = {
-    "fit": (
-        Dimension(FIT_PAGE_SIZE_WIDTH, FIT_PAGE_SIZE_UNIT),
-        Dimension(FIT_PAGE_SIZE_HEIGHT, FIT_PAGE_SIZE_UNIT),
-    )
-}
-
+PAGE_SIZES["fit"] = (
+    Dimension(FIT_PAGE_SIZE_WIDTH, FIT_PAGE_SIZE_UNIT),
+    Dimension(FIT_PAGE_SIZE_HEIGHT, FIT_PAGE_SIZE_UNIT),
+)
 
 # In "portrait" orientation.
 assert all(width.value < height.value for width, height in PAGE_SIZES.values())
