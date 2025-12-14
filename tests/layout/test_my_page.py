@@ -1995,7 +1995,7 @@ def test_page_size_fit_no_page_break_after():
       """
     )
     assert len(pages) == 1
-    # assert int(page.margin_height()) == FIT_PAGE_SIZE_HEIGHT
+
 
 
 # 96px / in 1 px = 1/96 in = 0,026458 cm

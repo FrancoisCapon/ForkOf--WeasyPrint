@@ -21,6 +21,7 @@ from .pdf import VARIANTS, generate_pdf
 from .pdf.metadata import generate_rdf_metadata
 from .text.fonts import FontConfiguration
 
+from weasyprint.css.computed_values import FIT_PAGE_SIZE_WIDTH, FIT_PAGE_SIZE_HEIGHT
 
 class Page:
     """Represents a single rendered page.
@@ -234,6 +235,15 @@ class Document:
             style_for, get_image_from_uri, font_config, counter_style,
             target_collector)
         return context
+    
+    @classmethod
+    def _is_first_page_size_fit(page_boxes):
+        first_page = page_boxes[0]
+        if first_page.width != FIT_PAGE_SIZE_WIDTH:
+            return False
+        if first_page.width != FIT_PAGE_SIZE_HEIGHT:
+            return False
+        return True
 
     @classmethod
     def _render(cls, html, font_config, counter_style, color_profiles, options):
@@ -253,8 +263,12 @@ class Document:
             html.etree_element, context.style_for, context.get_image_from_uri,
             html.base_url, context.target_collector, counter_style,
             context.footnotes)
+        
+        #print(root_box.__dict__)
 
         page_boxes = layout_document(html, root_box, context)
+        print(fcpage)
+        print(fcpage.width)
         rendering = cls(
             [Page(page_box) for page_box in page_boxes],
             DocumentMetadata(**get_html_metadata(html)),
