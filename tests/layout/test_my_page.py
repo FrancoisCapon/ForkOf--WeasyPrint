@@ -1967,7 +1967,7 @@ def test_page_size_fit_one_element():
     pages = render_pages(
       """
       <style>
-      @page { size: fit; }
+      @page { size: fit;}
       * {margin: 0; padding: 0}
       div {width: 222px; height: 333px}
       </style>
@@ -1980,7 +1980,7 @@ def test_page_size_fit_one_element():
     assert int(page.margin_height()) == 333 + 1
 
 @assert_no_logs
-def test_page_size_fit_one_element_with_margin():
+def test_page_size_fit_one_element_with_margins():
     pages = render_pages(
       """
       <style>

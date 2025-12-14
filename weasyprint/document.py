@@ -268,9 +268,9 @@ class Document:
     @classmethod
     def _is_first_page_size_fit(cls, page_boxes):
         first_page = next(page_boxes)
-        if first_page.width != FIT_PAGE_SIZE_WIDTH:
+        if first_page.margin_left + first_page.width + first_page.margin_right != FIT_PAGE_SIZE_WIDTH:
             return False
-        if first_page.height != FIT_PAGE_SIZE_HEIGHT:
+        if first_page.margin_top + first_page.height + first_page.margin_bottom != FIT_PAGE_SIZE_HEIGHT:
             return False
         return True
 
@@ -284,7 +284,7 @@ class Document:
             if box_tag not in ['body', 'style']:
                 width = max(width, box.position_x + box.width)
                 height = max(height, box.position_y + box.height)
-        print(type(box), box_tag, box.position_x, box.position_y, width, height)
+                print(type(box), box_tag, box.position_x, box.position_y, width, height)
         # avoid content "null" (1px css = 0,26 mm)
         # add
         print() 
@@ -319,6 +319,7 @@ class Document:
 
         page_boxes, page_boxes_1, page_boxes_2 = itertools.tee(page_boxes, 3)
         is_page_size_fit = cls._is_first_page_size_fit(page_boxes_2)
+        #print(is_page_size_fit)
         # pages_number > 1
         if sum(1 for _ in page_boxes_1) > 1:
             # @page size fit
