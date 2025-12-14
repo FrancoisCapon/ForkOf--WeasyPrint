@@ -22,6 +22,7 @@ from .pdf.metadata import generate_rdf_metadata
 from .text.fonts import FontConfiguration
 
 import itertools
+import xml.etree.ElementTree as ElementTree
 from weasyprint.css.computed_values import FIT_PAGE_SIZE_WIDTH, FIT_PAGE_SIZE_HEIGHT
 
 
@@ -288,6 +289,8 @@ class Document:
             html, font_config, counter_style, color_profiles, options
         )
 
+        print(options)
+
         root_box = build_formatting_structure(
             html.etree_element,
             context.style_for,
@@ -303,19 +306,32 @@ class Document:
 
         is_first_page_size_fit = cls._is_first_page_size_fit(page_boxes_copy)
         if is_first_page_size_fit:
-            disabled_page_break = CSS(
-                string=
-                """
+            # disabled_page_break = CSS(
+            #     string="""
+            #     * {
+            #         break-before: avoid !important;
+            #         break-after: avoid !important;
+            #     }
+            #     """
+            # )
+            # if options["stylesheets"]:
+            #     options["stylesheets"].append(disabled_page_break)
+            # else:
+            #     options["stylesheets"] = [disabled_page_break]
+            disabled_page_break_element = etree.Element("style")
+            disabled_page_break = """
+                <style>
                 * {
                     break-before: avoid !important;
                     break-after: avoid !important;
                 }
-                """
+                </style>
+            """
+            print(html.etree_element)
+            context = cls._build_layout_context(
+                html, font_config, counter_style, color_profiles, options
             )
-            if options['stylesheets']:
-                options['stylesheets'].append(disabled_page_break)
-            else:
-                options['stylesheets'] = [disabled_page_break]
+            page_boxes = layout_document(html, root_box, context)
 
         rendering = cls(
             [Page(page_box) for page_box in page_boxes],
