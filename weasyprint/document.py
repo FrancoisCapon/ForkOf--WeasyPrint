@@ -237,8 +237,8 @@ class Document:
         return context
     
     @classmethod
-    def _is_first_page_size_fit(page_boxes):
-        first_page = page_boxes[0]
+    def _is_first_page_size_fit(cls, page_boxes):
+        first_page = next(page_boxes)
         if first_page.width != FIT_PAGE_SIZE_WIDTH:
             return False
         if first_page.width != FIT_PAGE_SIZE_HEIGHT:
@@ -262,13 +262,13 @@ class Document:
         root_box = build_formatting_structure(
             html.etree_element, context.style_for, context.get_image_from_uri,
             html.base_url, context.target_collector, counter_style,
-            context.footnotes)
-        
-        #print(root_box.__dict__)
+            context.footnotes)     
 
         page_boxes = layout_document(html, root_box, context)
-        print(fcpage)
-        print(fcpage.width)
+
+        if cls._is_first_page_size_fit(page_boxes):
+            pass
+
         rendering = cls(
             [Page(page_box) for page_box in page_boxes],
             DocumentMetadata(**get_html_metadata(html)),
@@ -291,7 +291,7 @@ class Document:
         # 0 0 37800 30.0
         # changer les dimensions de la page
         # rendering.pages[0]._page_box.height = 100
-        rendering.pages[0]._page_box.width = 200
+        #rendering.pages[0]._page_box.width = 200
 
         #print(rendering._html.__dict__)
         #print(rendering._html.etree_element)
