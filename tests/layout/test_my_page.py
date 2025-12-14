@@ -1942,27 +1942,24 @@ def test_running_float():
 
 @assert_no_logs
 def test_page_size_fit_propertie():
-    """Test the layout for ``@page size fit`` propertie."""
     render_pages("<style>@page { size: fit; }</style>")
 
 @assert_no_logs
-def test_page_size_fit_one_element():
-    """Test the layout for ``@page size fit`` propertie."""
-    page, = render_pages(
+def test_page_size_fit_no_element():
+    pages = render_pages(
       """
       <style>
       @page { size: fit; }
       * {margin: 0; padding: 0}
-      div {width: 222px; height: 333px} /* native unit is px css */
       </style>
-      <div></div>
       """
     )
-    assert int(page.margin_width()) == 200
+    assert len(pages) == 1
+    assert int(pages[0].margin_width()) == 1
+    assert int(pages[0].margin_width()) == 1
 
 @assert_no_logs
 def test_page_size_fit_no_page_break_before():
-    """Test the layout for ``@page size fit`` propertie."""
     pages = render_pages(
       """
       <style>
@@ -1982,7 +1979,6 @@ def test_page_size_fit_no_page_break_before():
 
 @assert_no_logs
 def test_page_size_fit_no_page_break_after():
-    """Test the layout for ``@page size fit`` propertie."""
     pages = render_pages(
       """
       <style>

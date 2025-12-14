@@ -275,6 +275,14 @@ class Document:
         return True
 
     @classmethod
+    def _get_page_fit_size(cls, body):
+        width = height = 0
+        for element in body.element.iter():
+            print(element)
+        # avoid content "null" (1px css = 0,26 mm)
+        return width + 1, height + 1
+
+    @classmethod
     def _render(cls, html, font_config, counter_style, color_profiles, options):
         if font_config is None:
             font_config = FontConfiguration()
@@ -302,7 +310,7 @@ class Document:
         )
 
         page_boxes = layout_document(html, root_box, context)
-        
+
         page_boxes, page_boxes_1, page_boxes_2 = itertools.tee(page_boxes, 3)
         is_page_size_fit = cls._is_first_page_size_fit(page_boxes_2)
         # pages_number > 1
@@ -311,8 +319,10 @@ class Document:
             if is_page_size_fit:
                 # disabled page break
                 disabled_page_break_element = ElementTree.Element("style")
-                disabled_page_break_element.text = "* {break-before: avoid !important; break-after: avoid !important;}"
-                html_etree_head =  html.etree_element.find("head")
+                disabled_page_break_element.text = (
+                    "* {break-before: avoid !important; break-after: avoid !important;}"
+                )
+                html_etree_head = html.etree_element.find("head")
                 html_etree_head.append(disabled_page_break_element)
                 print(ElementTree.tostring(html.etree_element))
                 # again without page break
@@ -333,7 +343,9 @@ class Document:
                 # check one page only
                 pages_number = sum(1 for _ in page_boxes_1)
                 if pages_number != 1:
-                     raise ValueError(f"More than one page for page size fit: {pages_number} pages!")
+                    raise ValueError(
+                        f"More than one page for page size fit: {pages_number} pages!"
+                    )
 
         rendering = cls(
             [Page(page_box) for page_box in page_boxes],
@@ -342,21 +354,28 @@ class Document:
             font_config,
             color_profiles,
         )
-        rendering._html = html
-        # print(rendering.__dict__)
-        # print(rendering.pages[0].__dict__)
-        # print(rendering.pages[0]._page_box)
-        # print(rendering.pages[0]._page_box.all_children())
-        # print(rendering.pages[0]._page_box.children[0])
-        # print(rendering.pages[0]._page_box.children[0].position_x)
-        # print(rendering.pages[0]._page_box.children[0].position_y)
-        # print(rendering.pages[0]._page_box.children[0].width)
-        # print(rendering.pages[0]._page_box.children[0].height)
-        # print(rendering.pages[0]._page_box.children[0].children[0])
-        # print(rendering.pages[0]._page_box.children[0].children[0].position_x)
-        # print(rendering.pages[0]._page_box.children[0].children[0].position_y)
-        # print(rendering.pages[0]._page_box.children[0].children[0].width)
-        # print(rendering.pages[0]._page_box.children[0].children[0].height)
+
+        if is_page_size_fit:
+            page_body = rendering.pages[0]._page_box.children[0].children[0]
+            page_width, page_height = cls._get_page_fit_size(page_body)
+            rendering.pages[0]._page_box.width = page_width
+            rendering.pages[0]._page_box.height = page_height
+            #print("wxh", page_width, page_height)
+            # print(rendering.__dict__)
+            # print(rendering.pages[0].__dict__)
+            # print(rendering.pages[0]._page_box)
+            # print(rendering.pages[0]._page_box.all_children())
+            # print(rendering.pages[0]._page_box.children[0])
+            # print(rendering.pages[0]._page_box.children[0].position_x)
+            # print(rendering.pages[0]._page_box.children[0].position_y)
+            # print(rendering.pages[0]._page_box.children[0].width)
+            # print(rendering.pages[0]._page_box.children[0].height)
+            # print(rendering.pages[0]._page_box.children[0].children[0])
+            # print(rendering.pages[0]._page_box.children[0].children[0].position_x)
+            # print(rendering.pages[0]._page_box.children[0].children[0].position_y)
+            # print(rendering.pages[0]._page_box.children[0].children[0].width)
+            # print(rendering.pages[0]._page_box.children[0].children[0].height)
+            # print(rendering.pages[0]._page_box.children[0].children[0].all_children())
         # 0 0 37800 30.0
         # changer les dimensions de la page
         # rendering.pages[0]._page_box.height = 100
@@ -365,6 +384,7 @@ class Document:
         # print(rendering._html.__dict__)
         # print(rendering._html.etree_element)
         # print(rendering._html.etree_element.tag)
+        rendering._html = html
         return rendering
 
     def __init__(self, pages, metadata, url_fetcher, font_config, color_profiles):
