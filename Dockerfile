@@ -11,9 +11,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-# COPY . .
+COPY . .
 
 RUN pip install pytest
 RUN pip install --user --no-cache-dir -e .
 
 CMD ["/bin/bash"]
+
+# docker build -f Dockerfile -t shipd/weasyprint:lab-01 .
