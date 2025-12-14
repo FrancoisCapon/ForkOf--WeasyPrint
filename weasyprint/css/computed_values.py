@@ -115,6 +115,7 @@ PAGE_SIZES = {
         ('letter', 8.5, 11, 'in'),
         ('legal', 8.5, 14, 'in'),
         ('ledger', 11, 17, 'in'),
+        ('fit', 37800, 37801, 'px'), # no square
     )
 }
 # In "portrait" orientation.
