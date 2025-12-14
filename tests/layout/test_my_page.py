@@ -6,6 +6,8 @@ from weasyprint.formatting_structure import boxes
 
 from ..testing_utils import assert_no_logs, render_pages
 
+from weasyprint.css.computed_values import FIT_PAGE_SIZE_WIDTH, FIT_PAGE_SIZE_HEIGHT
+
 
 @assert_no_logs
 @pytest.mark.parametrize(('size', 'width', 'height'), [
@@ -1735,6 +1737,12 @@ def test_page_size_fit_propertie():
     assert int(page.margin_width()) == 37800
     assert int(page.margin_height()) == 37801
 
+@assert_no_logs
+def test_page_size_fit_propertie():
+    """Test the layout for ``@page size fit`` propertie."""
+    page, = render_pages('<style>@page { size: fit; }</style>')
+    assert int(page.margin_width()) == FIT_PAGE_SIZE_WIDTH
+    assert int(page.margin_height()) == FIT_PAGE_SIZE_HEIGHT
 
 
 
@@ -1743,3 +1751,4 @@ def test_page_size_fit_propertie():
 
 # docker run -v .:/app -it shipd/weasyprint:lab-01 pytest tests/layout/test_my_page.py::test_page_size_fit_propertie
 # docker run -v .:/app -it shipd/weasyprint:lab-01 pytest -k 'fit' tests/layout/test_my_page.py
+# pytest -s -k 'fit' tests/layout/test_my_page.py

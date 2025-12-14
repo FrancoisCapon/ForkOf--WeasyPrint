@@ -260,6 +260,8 @@ class Document:
             DocumentMetadata(**get_html_metadata(html)),
             html.url_fetcher, font_config, color_profiles)
         rendering._html = html
+        print(rendering.__dict__)
+        print(rendering.pages[0].__dict__)
         return rendering
 
     def __init__(self, pages, metadata, url_fetcher, font_config, color_profiles):
