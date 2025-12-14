@@ -304,10 +304,11 @@ class Document:
         page_boxes = layout_document(html, root_box, context)
         
         page_boxes, page_boxes_1, page_boxes_2 = itertools.tee(page_boxes, 3)
+        is_page_size_fit = cls._is_first_page_size_fit(page_boxes_2)
         # pages_number > 1
         if sum(1 for _ in page_boxes_1) > 1:
             # @page size fit
-            if cls._is_first_page_size_fit(page_boxes_2):
+            if is_page_size_fit:
                 # disabled page break
                 disabled_page_break_element = ElementTree.Element("style")
                 disabled_page_break_element.text = "* {break-before: avoid !important; break-after: avoid !important;}"
@@ -329,6 +330,7 @@ class Document:
                 )
                 page_boxes = layout_document(html, root_box, context)
                 page_boxes, page_boxes_1 = itertools.tee(page_boxes)
+                # check one page only
                 pages_number = sum(1 for _ in page_boxes_1)
                 if pages_number != 1:
                      raise ValueError(f"More than one page for page size fit: {pages_number} pages!")
