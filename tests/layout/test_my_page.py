@@ -1737,6 +1737,7 @@ def test_page_size_fit_propertie():
 
 
 
+
 # 96px / in 1 px = 1/96 in = 0,026458 cm
 # 1 in (pouce) = 96 px CSS = 2.54 cm
 
