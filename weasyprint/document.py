@@ -262,6 +262,20 @@ class Document:
         rendering._html = html
         print(rendering.__dict__)
         print(rendering.pages[0].__dict__)
+        print(rendering.pages[0]._page_box)
+        print(rendering.pages[0]._page_box.all_children())
+        print(rendering.pages[0]._page_box.children[0])
+        print(rendering.pages[0]._page_box.children[0].children[0])
+        # print(rendering.pages[0]._page_box.all_children()[0])
+        # print(rendering.pages[0]._page_box.all_children()[0].position_x)
+        # print(rendering.pages[0]._page_box.all_children()[0].position_y)
+        # print(rendering.pages[0]._page_box.all_children()[0].width)
+        # print(rendering.pages[0]._page_box.all_children()[0].height)
+        #print(rendering.pages[0]._page_box.all_children()[0][0])
+
+        #print(rendering._html.__dict__)
+        #print(rendering._html.etree_element)
+        # print(rendering._html.etree_element.tag)
         return rendering
 
     def __init__(self, pages, metadata, url_fetcher, font_config, color_profiles):

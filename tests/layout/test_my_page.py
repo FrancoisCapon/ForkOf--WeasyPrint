@@ -1744,7 +1744,12 @@ def test_page_size_fit_propertie():
     assert int(page.margin_width()) == FIT_PAGE_SIZE_WIDTH
     assert int(page.margin_height()) == FIT_PAGE_SIZE_HEIGHT
 
-
+@assert_no_logs
+def test_page_size_fit_basic():
+    """Test the layout for ``@page size fit`` propertie."""
+    page, = render_pages('<style>@page { size: fit; } p {width:20px; height:30px}</style><p id="pid"></p>')
+    assert int(page.margin_width()) == FIT_PAGE_SIZE_WIDTH
+    assert int(page.margin_height()) == FIT_PAGE_SIZE_HEIGHT
 
 # 96px / in 1 px = 1/96 in = 0,026458 cm
 # 1 in (pouce) = 96 px CSS = 2.54 cm
