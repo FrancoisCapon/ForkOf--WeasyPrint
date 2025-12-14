@@ -1729,8 +1729,10 @@ def test_running_float():
     ''')
 
 @assert_no_logs
-def test_page_size_fit():
+def test_page_size_fit_propertie():
     """Test the layout for ``@page size fit`` propertie."""
     page, = render_pages('<style>@page { size: fit; }</style>')
-    #assert int(page.margin_width()) == width
-    #assert int(page.margin_height()) == height
+
+
+# docker run -v .:/app -it shipd/weasyprint:lab-01 pytest tests/layout/test_my_page.py::test_page_size_fit_propertie
+# docker run -v .:/app -it shipd/weasyprint:lab-01 pytest -k 'fit' tests/layout/test_my_page.py
