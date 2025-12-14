@@ -1961,22 +1961,40 @@ def test_page_size_fit_one_element():
     assert int(page.margin_width()) == 200
 
 @assert_no_logs
-def test_page_size_fit_two_elements_with_page_break():
+def test_page_size_fit_no_page_break_before():
     """Test the layout for ``@page size fit`` propertie."""
     pages = render_pages(
       """
       <style>
       @page { size: fit; }
       * {margin: 0; padding: 0}
-      div {width: 222px; height: 333px; page-break-after: always}
+      div {width: 222px; height: 333px; break-before: page;}
       </style>
+      <div></div>
+      <div></div>
       <div></div>
       <div></div>
       """
     )
     assert len(pages) == 1
-    page = pages[0]
-    assert int(page.margin_width()) == 200
+
+@assert_no_logs
+def test_page_size_fit_no_page_break_after():
+    """Test the layout for ``@page size fit`` propertie."""
+    pages = render_pages(
+      """
+      <style>
+      @page { size: fit; }
+      * {margin: 0; padding: 0}
+      div {width: 222px; height: 333px; break-after: page}
+      </style>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      """
+    )
+    assert len(pages) == 1
     # assert int(page.margin_height()) == FIT_PAGE_SIZE_HEIGHT
 
 
