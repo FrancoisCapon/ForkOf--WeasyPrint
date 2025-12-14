@@ -284,18 +284,8 @@ class Document:
             width = max(width, box.position_x + box.width)
             height = max(height, box.position_y + box.height)
             print(box, width, height)
-        # print(type(body))
-        # print(body.position_x, body.position_y,body.width, body.height)
-        # print(body.__dict__)
-        # if body.children:
-        #     print(body.children[0].width, body.children[0].position_y)
-        #     print(body.children[0].width, body.children[1].position_y)
-        #     print()
-        # for element in body.element.iter():
-        #     #print(element.x, element.y, element.width, element.heigth)
-        #     #print(element.position_x)
-        #     pass
         # avoid content "null" (1px css = 0,26 mm)
+        # add 
         return width + 1, height + 1
 
     @classmethod

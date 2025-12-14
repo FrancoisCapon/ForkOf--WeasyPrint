@@ -1996,8 +1996,8 @@ def test_page_size_fit_no_page_break_before():
     )
     assert len(pages) == 1
     page = pages[0]
-    assert int(page.margin_width()) == 1
-    assert int(page.margin_width()) == 1
+    assert int(page.margin_width()) == 222 + 1
+    assert int(page.margin_height()) == 4 * 333 + 1
 
 @assert_no_logs
 def test_page_size_fit_no_page_break_after():
@@ -2016,8 +2016,8 @@ def test_page_size_fit_no_page_break_after():
     )
     assert len(pages) == 1
     page = pages[0]
-    assert int(page.margin_width()) == 1
-    assert int(page.margin_width()) == 1
+    assert int(page.margin_width()) == 222 + 1
+    assert int(page.margin_height()) == 4 * 333 + 1
 
 
 
