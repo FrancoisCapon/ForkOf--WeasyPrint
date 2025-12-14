@@ -1942,7 +1942,8 @@ def test_running_float():
 
 @assert_no_logs
 def test_page_size_fit_propertie():
-    render_pages("<style>@page { size: fit; }</style>")
+    pages = render_pages("<style>@page { size: fit; }</style>")
+    assert len(pages) == 1
 
 @assert_no_logs
 def test_page_size_fit_no_element():
@@ -1955,8 +1956,9 @@ def test_page_size_fit_no_element():
       """
     )
     assert len(pages) == 1
-    assert int(pages[0].margin_width()) == 1
-    assert int(pages[0].margin_width()) == 1
+    page = pages[0]
+    assert int(page.margin_width()) == 1
+    assert int(page.margin_width()) == 1
 
 @assert_no_logs
 def test_page_size_fit_no_page_break_before():
@@ -1976,6 +1978,9 @@ def test_page_size_fit_no_page_break_before():
       """
     )
     assert len(pages) == 1
+    page = pages[0]
+    assert int(page.margin_width()) == 1
+    assert int(page.margin_width()) == 1
 
 @assert_no_logs
 def test_page_size_fit_no_page_break_after():
@@ -1993,6 +1998,9 @@ def test_page_size_fit_no_page_break_after():
       """
     )
     assert len(pages) == 1
+    page = pages[0]
+    assert int(page.margin_width()) == 1
+    assert int(page.margin_width()) == 1
 
 
 
