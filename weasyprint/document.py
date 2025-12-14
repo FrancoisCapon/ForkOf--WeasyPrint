@@ -266,12 +266,11 @@ class Document:
         print(rendering.pages[0]._page_box.all_children())
         print(rendering.pages[0]._page_box.children[0])
         print(rendering.pages[0]._page_box.children[0].children[0])
-        # print(rendering.pages[0]._page_box.all_children()[0])
-        # print(rendering.pages[0]._page_box.all_children()[0].position_x)
-        # print(rendering.pages[0]._page_box.all_children()[0].position_y)
-        # print(rendering.pages[0]._page_box.all_children()[0].width)
-        # print(rendering.pages[0]._page_box.all_children()[0].height)
-        #print(rendering.pages[0]._page_box.all_children()[0][0])
+        print(rendering.pages[0]._page_box.children[0].children[0].position_x)
+        print(rendering.pages[0]._page_box.children[0].children[0].position_y)
+        print(rendering.pages[0]._page_box.children[0].children[0].width)
+        print(rendering.pages[0]._page_box.children[0].children[0].height)
+        # 0 0 37800 30.0
 
         #print(rendering._html.__dict__)
         #print(rendering._html.etree_element)
