@@ -1959,8 +1959,8 @@ def test_page_size_fit_no_element():
     )
     assert len(pages) == 1
     page = pages[0]
-    assert int(page.margin_width()) == 1
-    assert int(page.margin_width()) == 1
+    assert int(page.width) == 1
+    assert int(page.height) == 1
 
 @assert_no_logs
 def test_page_size_fit_one_element():
@@ -1976,15 +1976,15 @@ def test_page_size_fit_one_element():
     )
     assert len(pages) == 1
     page = pages[0]
-    assert int(page.margin_width()) == 222 + 1
-    assert int(page.margin_height()) == 333 + 1
+    assert int(page.width) == 222 + 1
+    assert int(page.height) == 333 + 1
 
 @assert_no_logs
-def test_page_size_fit_one_element_with_margins():
+def test_page_size_fit_one_element_with_page_margins():
     pages = render_pages(
       """
       <style>
-      @page { size: fit; margin-right: 11px; margin-top: 22px; margin-left: 33px; margin-bottom: 44px}
+      @page { size: fit; margin-left: 11px; margin-top: 22px; margin-right: 33px; margin-bottom: 44px}
       * {margin: 0; padding: 0}
       div {width: 100px; height: 200px}
       </style>

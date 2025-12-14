@@ -268,6 +268,7 @@ class Document:
     @classmethod
     def _is_first_page_size_fit(cls, page_boxes):
         first_page = next(page_boxes)
+        # page margins are internal
         if first_page.margin_left + first_page.width + first_page.margin_right != FIT_PAGE_SIZE_WIDTH:
             return False
         if first_page.margin_top + first_page.height + first_page.margin_bottom != FIT_PAGE_SIZE_HEIGHT:
