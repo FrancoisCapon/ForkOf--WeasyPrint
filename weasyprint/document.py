@@ -318,16 +318,11 @@ class Document:
             #     options["stylesheets"].append(disabled_page_break)
             # else:
             #     options["stylesheets"] = [disabled_page_break]
-            disabled_page_break_element = etree.Element("style")
-            disabled_page_break = """
-                <style>
-                * {
-                    break-before: avoid !important;
-                    break-after: avoid !important;
-                }
-                </style>
-            """
-            print(html.etree_element)
+            disabled_page_break_element = ElementTree.Element("style")
+            disabled_page_break_element.text = '* {break-before: avoid !important; break-after: avoid !important}'
+            # print(type(html))
+            html.etree_element.append(disabled_page_break_element)
+            print(ElementTree.tostring(html.etree_element))
             context = cls._build_layout_context(
                 html, font_config, counter_style, color_profiles, options
             )
