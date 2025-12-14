@@ -1978,7 +1978,24 @@ def test_page_size_fit_one_element():
     assert int(page.margin_height()) == 333 + 1
 
 @assert_no_logs
-def test_page_size_fit_no_page_break_before():
+def test_page_size_fit_one_element_with_margin():
+    pages = render_pages(
+      """
+      <style>
+      @page { size: fit; margin-right: 11px; margin-top: 22px; margin-left: 33px; margin-bottom: 44px}
+      * {margin: 0; padding: 0}
+      div {width: 100px; height: 200px}
+      </style>
+      <div></div>
+      """
+    )
+    assert len(pages) == 1
+    page = pages[0]
+    assert int(page.margin_width()) == 11 + 100 + 33 + 1
+    assert int(page.margin_height()) == 22 + 200 + 44 + 1
+
+@assert_no_logs
+def test_page_size_fit_no_page_break_before(): 
     pages = render_pages(
       """
       <style>
@@ -2006,7 +2023,7 @@ def test_page_size_fit_no_page_break_after():
       <style>
       @page { size: fit; }
       * {margin: 0; padding: 0}
-      div {width: 222px; height: 333px; break-after: page}
+      div {width: 333px; height: 444px; break-after: page}
       </style>
       <div></div>
       <div></div>
@@ -2016,8 +2033,8 @@ def test_page_size_fit_no_page_break_after():
     )
     assert len(pages) == 1
     page = pages[0]
-    assert int(page.margin_width()) == 222 + 1
-    assert int(page.margin_height()) == 4 * 333 + 1
+    assert int(page.margin_width()) == 333 + 1
+    assert int(page.margin_height()) == 4 * 444 + 1
 
 
 

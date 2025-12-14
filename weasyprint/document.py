@@ -279,13 +279,15 @@ class Document:
         width = height = 0
         boxes = body.descendants()
         # first descendants is himself!
-        next(boxes)
         for box in boxes:
-            width = max(width, box.position_x + box.width)
-            height = max(height, box.position_y + box.height)
-            print(box, width, height)
+            box_tag = getattr(box, "element_tag", None)
+            if box_tag not in ['body', 'style']:
+                width = max(width, box.position_x + box.width)
+                height = max(height, box.position_y + box.height)
+        print(type(box), box_tag, box.position_x, box.position_y, width, height)
         # avoid content "null" (1px css = 0,26 mm)
-        # add 
+        # add
+        print() 
         return width + 1, height + 1
 
     @classmethod
