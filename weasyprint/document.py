@@ -21,6 +21,7 @@ from .pdf import VARIANTS, generate_pdf
 from .pdf.metadata import generate_rdf_metadata
 from .text.fonts import FontConfiguration
 
+import itertools
 from weasyprint.css.computed_values import FIT_PAGE_SIZE_WIDTH, FIT_PAGE_SIZE_HEIGHT
 
 class Page:
@@ -265,8 +266,9 @@ class Document:
             context.footnotes)     
 
         page_boxes = layout_document(html, root_box, context)
+        page_boxes, page_boxes_copy = itertools.tee(page_boxes)
 
-        if cls._is_first_page_size_fit(page_boxes):
+        if cls._is_first_page_size_fit(page_boxes_copy):
             pass
 
         rendering = cls(
