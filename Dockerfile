@@ -21,3 +21,4 @@ CMD ["/bin/bash"]
 # docker build -f Dockerfile -t shipd/weasyprint:lab-01 .
 # docker run -v .:/app -it shipd/weasyprint:lab-01
 # docker run -v .:/app shipd/weasyprint:lab-01 pytest
+# docker run -v .:/app -it shipd/weasyprint:lab-01 pytest tests/layout/test_page.py
