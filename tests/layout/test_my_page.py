@@ -1747,7 +1747,7 @@ def test_page_size_fit_propertie():
 @assert_no_logs
 def test_page_size_fit_basic():
     """Test the layout for ``@page size fit`` propertie."""
-    page, = render_pages('<style>@page { size: fit; } body { display: inline-block; width: auto } p {width:20px; height:30px}</style><p id="pid"></p>')
+    page, = render_pages('<style>@page { size: fit; } p {width:20px; height:30px}</style><p id="pid"></p>')
     assert int(page.margin_width()) == FIT_PAGE_SIZE_WIDTH
     assert int(page.margin_height()) == FIT_PAGE_SIZE_HEIGHT
 
