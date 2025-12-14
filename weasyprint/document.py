@@ -306,22 +306,18 @@ class Document:
 
         is_first_page_size_fit = cls._is_first_page_size_fit(page_boxes_copy)
         if is_first_page_size_fit:
-            # disabled_page_break = CSS(
-            #     string="""
-            #     * {
-            #         break-before: avoid !important;
-            #         break-after: avoid !important;
-            #     }
-            #     """
-            # )
-            # if options["stylesheets"]:
-            #     options["stylesheets"].append(disabled_page_break)
-            # else:
-            #     options["stylesheets"] = [disabled_page_break]
             disabled_page_break_element = ElementTree.Element("style")
-            disabled_page_break_element.text = '* {break-before: avoid !important; break-after: avoid !important}'
-            # print(type(html))
-            html.etree_element.append(disabled_page_break_element)
+            disabled_page_break_element.text = '* {break-before: avoid !important; break-after: avoid !important; break-inside: avoid;}'
+            html_etree = html.etree_element
+            html_etree_head = html_etree.find("head")
+            if html_etree_head is None:
+                html_etree_head = ElementTree.Element("head")
+                html_etree_head.append(disabled_page_break_element)
+                html_etree.insert(0, html_etree_head)
+            else:
+                html_etree_head.append(disabled_page_break_element)
+            # print(html.etree_element.find("head"))
+            # html.etree_element.append(disabled_page_break_element)
             print(ElementTree.tostring(html.etree_element))
             context = cls._build_layout_context(
                 html, font_config, counter_style, color_profiles, options

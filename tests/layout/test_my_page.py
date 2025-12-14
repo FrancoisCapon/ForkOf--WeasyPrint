@@ -1974,6 +1974,8 @@ def test_page_size_fit_no_page_break_before():
       <div></div>
       <div></div>
       <div></div>
+      <style>
+      </style>
       """
     )
     assert len(pages) == 1
