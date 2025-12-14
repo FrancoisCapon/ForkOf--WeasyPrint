@@ -24,6 +24,7 @@ from .text.fonts import FontConfiguration
 import itertools
 from weasyprint.css.computed_values import FIT_PAGE_SIZE_WIDTH, FIT_PAGE_SIZE_HEIGHT
 
+
 class Page:
     """Represents a single rendered page.
 
@@ -42,8 +43,9 @@ class Page:
         #: The page bleed widths as a :obj:`dict` with ``'top'``, ``'right'``,
         #: ``'bottom'`` and ``'left'`` as keys, and values in CSS pixels.
         self.bleed = {
-            side: page_box.style[f'bleed_{side}'].value
-            for side in ('top', 'right', 'bottom', 'left')}
+            side: page_box.style[f"bleed_{side}"].value
+            for side in ("top", "right", "bottom", "left")
+        }
 
         #: The :obj:`list` of ``(level, label, target, state)``
         #: :obj:`tuples <tuple>`. ``level`` and ``label`` are respectively an
@@ -94,9 +96,21 @@ class DocumentMetadata:
 
     New attributes may be added in future versions of WeasyPrint.
     """
-    def __init__(self, title=None, authors=None, description=None, keywords=None,
-                 generator=None, created=None, modified=None, attachments=None,
-                 lang=None, custom=None, generate_rdf_metadata=generate_rdf_metadata):
+
+    def __init__(
+        self,
+        title=None,
+        authors=None,
+        description=None,
+        keywords=None,
+        generator=None,
+        created=None,
+        modified=None,
+        attachments=None,
+        lang=None,
+        custom=None,
+        generate_rdf_metadata=generate_rdf_metadata,
+    ):
         #: The title of the document, as a string or :obj:`None`.
         #: Extracted from the ``<title>`` element in HTML
         #: and written to the ``/Title`` info field in PDF.
@@ -180,9 +194,7 @@ class DiskCache:
             self._memory_cache[key] = value
 
     def __contains__(self, key):
-        return (
-            key in self._memory_cache or
-            self._path_from_key(key).exists())
+        return key in self._memory_cache or self._path_from_key(key).exists()
 
     def __del__(self):
         try:
@@ -206,37 +218,52 @@ class Document:
     """
 
     @classmethod
-    def _build_layout_context(cls, html, font_config, counter_style, color_profiles,
-                              options):
+    def _build_layout_context(
+        cls, html, font_config, counter_style, color_profiles, options
+    ):
         target_collector = TargetCollector()
         page_rules = []
         layers = []
         user_stylesheets = []
-        cache = options['cache']
+        cache = options["cache"]
         if cache is None:
             cache = {}
         elif not isinstance(cache, (dict, DiskCache)):
             cache = DiskCache(cache)
-        for css in options['stylesheets'] or []:
-            if not hasattr(css, 'matcher'):
+        for css in options["stylesheets"] or []:
+            if not hasattr(css, "matcher"):
                 css = CSS(
-                    guess=css, media_type=html.media_type,
-                    font_config=font_config, counter_style=counter_style,
-                    color_profiles=color_profiles)
+                    guess=css,
+                    media_type=html.media_type,
+                    font_config=font_config,
+                    counter_style=counter_style,
+                    color_profiles=color_profiles,
+                )
             user_stylesheets.append(css)
         style_for = get_all_computed_styles(
-            html, user_stylesheets, options['presentational_hints'], font_config,
-            counter_style, color_profiles, page_rules, layers, target_collector,
-            options['pdf_forms'])
+            html,
+            user_stylesheets,
+            options["presentational_hints"],
+            font_config,
+            counter_style,
+            color_profiles,
+            page_rules,
+            layers,
+            target_collector,
+            options["pdf_forms"],
+        )
         get_image_from_uri = functools.partial(
-            original_get_image_from_uri, cache=cache,
-            url_fetcher=html.url_fetcher, options=options)
-        PROGRESS_LOGGER.info('Step 4 - Creating formatting structure')
+            original_get_image_from_uri,
+            cache=cache,
+            url_fetcher=html.url_fetcher,
+            options=options,
+        )
+        PROGRESS_LOGGER.info("Step 4 - Creating formatting structure")
         context = LayoutContext(
-            style_for, get_image_from_uri, font_config, counter_style,
-            target_collector)
+            style_for, get_image_from_uri, font_config, counter_style, target_collector
+        )
         return context
-    
+
     @classmethod
     def _is_first_page_size_fit(cls, page_boxes):
         first_page = next(page_boxes)
@@ -258,24 +285,45 @@ class Document:
             color_profiles = {}
 
         context = cls._build_layout_context(
-            html, font_config, counter_style, color_profiles, options)
+            html, font_config, counter_style, color_profiles, options
+        )
 
         root_box = build_formatting_structure(
-            html.etree_element, context.style_for, context.get_image_from_uri,
-            html.base_url, context.target_collector, counter_style,
-            context.footnotes)     
+            html.etree_element,
+            context.style_for,
+            context.get_image_from_uri,
+            html.base_url,
+            context.target_collector,
+            counter_style,
+            context.footnotes,
+        )
 
         page_boxes = layout_document(html, root_box, context)
         page_boxes, page_boxes_copy = itertools.tee(page_boxes)
 
         is_first_page_size_fit = cls._is_first_page_size_fit(page_boxes_copy)
         if is_first_page_size_fit:
-            print("size fit")
+            disabled_page_break = CSS(
+                string=
+                """
+                * {
+                    break-before: avoid !important;
+                    break-after: avoid !important;
+                }
+                """
+            )
+            if options['stylesheets']:
+                options['stylesheets'].append(disabled_page_break)
+            else:
+                options['stylesheets'] = [disabled_page_break]
 
         rendering = cls(
             [Page(page_box) for page_box in page_boxes],
             DocumentMetadata(**get_html_metadata(html)),
-            html.url_fetcher, font_config, color_profiles)
+            html.url_fetcher,
+            font_config,
+            color_profiles,
+        )
         rendering._html = html
         # print(rendering.__dict__)
         # print(rendering.pages[0].__dict__)
@@ -294,10 +342,10 @@ class Document:
         # 0 0 37800 30.0
         # changer les dimensions de la page
         # rendering.pages[0]._page_box.height = 100
-        #rendering.pages[0]._page_box.width = 200
+        # rendering.pages[0]._page_box.width = 200
 
-        #print(rendering._html.__dict__)
-        #print(rendering._html.etree_element)
+        # print(rendering._html.__dict__)
+        # print(rendering._html.etree_element)
         # print(rendering._html.etree_element.tag)
         return rendering
 
@@ -323,7 +371,7 @@ class Document:
 
         self.color_profiles = color_profiles
 
-    def copy(self, pages='all'):
+    def copy(self, pages="all"):
         """Take a subset of the pages.
 
         :type pages: :term:`iterable`
@@ -348,13 +396,17 @@ class Document:
             documents[0].copy(all_pages).write_pdf('combined.pdf')
 
         """
-        if pages == 'all':
+        if pages == "all":
             pages = self.pages
         elif not isinstance(pages, list):
             pages = list(pages)
         return type(self)(
-            pages, self.metadata, self.url_fetcher, self.font_config,
-            self.color_profiles)
+            pages,
+            self.metadata,
+            self.url_fetcher,
+            self.font_config,
+            self.color_profiles,
+        )
 
     def make_bookmark_tree(self, scale=1, transform_pages=False):
         """Make a tree of all bookmarks in the document.
@@ -385,8 +437,8 @@ class Document:
             else:
                 matrix = Matrix(a=scale, d=scale)
             previous_level = make_page_bookmark_tree(
-                page, skipped_levels, last_by_depth, previous_level,
-                page_number, matrix)
+                page, skipped_levels, last_by_depth, previous_level, page_number, matrix
+            )
         return root
 
     def write_pdf(self, target=None, zoom=1, finisher=None, **options):
@@ -421,29 +473,29 @@ class Document:
         options = new_options
 
         # Set default PDF version for PDF variants.
-        if variant := options['pdf_variant']:
+        if variant := options["pdf_variant"]:
             _, properties = VARIANTS[variant]
-            if 'version' in properties and not options['pdf_version']:
-                options['pdf_version'] = properties['version']
-            if 'identifier' in properties and not options['pdf_identifier']:
-                options['pdf_identifier'] = properties['identifier']
+            if "version" in properties and not options["pdf_version"]:
+                options["pdf_version"] = properties["version"]
+            if "identifier" in properties and not options["pdf_identifier"]:
+                options["pdf_identifier"] = properties["identifier"]
 
         pdf = generate_pdf(self, target, zoom, **options)
 
         if finisher:
             finisher(self, pdf)
 
-        identifier = options['pdf_identifier']
-        compress = not options['uncompressed_pdf']
-        version = options['pdf_version']
+        identifier = options["pdf_identifier"]
+        compress = not options["uncompressed_pdf"]
+        version = options["pdf_version"]
 
         if target is None:
             output = io.BytesIO()
             pdf.write(output, version, identifier, compress)
             return output.getvalue()
 
-        if hasattr(target, 'write'):
+        if hasattr(target, "write"):
             pdf.write(target, version, identifier, compress)
         else:
-            with open(target, 'wb') as fd:
+            with open(target, "wb") as fd:
                 pdf.write(fd, version, identifier, compress)
