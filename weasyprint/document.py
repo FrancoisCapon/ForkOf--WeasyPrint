@@ -242,7 +242,7 @@ class Document:
         first_page = next(page_boxes)
         if first_page.width != FIT_PAGE_SIZE_WIDTH:
             return False
-        if first_page.width != FIT_PAGE_SIZE_HEIGHT:
+        if first_page.height != FIT_PAGE_SIZE_HEIGHT:
             return False
         return True
 
@@ -268,8 +268,9 @@ class Document:
         page_boxes = layout_document(html, root_box, context)
         page_boxes, page_boxes_copy = itertools.tee(page_boxes)
 
-        if cls._is_first_page_size_fit(page_boxes_copy):
-            pass
+        is_first_page_size_fit = cls._is_first_page_size_fit(page_boxes_copy)
+        if is_first_page_size_fit:
+            print("size fit")
 
         rendering = cls(
             [Page(page_box) for page_box in page_boxes],
