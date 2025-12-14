@@ -6,7 +6,7 @@ from weasyprint.formatting_structure import boxes
 
 from ..testing_utils import assert_no_logs, render_pages
 
-from weasyprint.css.computed_values import FIT_PAGE_SIZE_WIDTH, FIT_PAGE_SIZE_HEIGHT
+# from weasyprint.css.computed_values import FIT_PAGE_SIZE_WIDTH, FIT_PAGE_SIZE_HEIGHT
 
 
 @assert_no_logs
@@ -1943,25 +1943,27 @@ def test_running_float():
 @assert_no_logs
 def test_page_size_fit_propertie():
     """Test the layout for ``@page size fit`` propertie."""
-    (page,) = render_pages("<style>@page { size: fit; }</style>")
-    # assert int(page.margin_width()) == 37800
-    # assert int(page.margin_height()) == 37801
+    render_pages("<style>@page { size: fit; }</style>")
+    #assert int(page.margin_width()) == 37800
+    #assert int(page.margin_height()) == 37801
 
 
 @assert_no_logs
-def test_page_size_fit_basic():
+def test_page_size_fit_one_element():
     """Test the layout for ``@page size fit`` propertie."""
     pages = render_pages(
       """
       <style>
       @page { size: fit; }
-      p {width:20px; height:30px}
+      * {margin: 0; padding: 0}
+      div {width: 222px; height: 333px} /* native unit is px css */
       </style>
       <div></div>
       """
     )
     assert len(pages) == 1
-    # assert int(page.margin_width()) == FIT_PAGE_SIZE_WIDTH
+    page = pages[0]
+    assert int(page.margin_width()) == 200
     # assert int(page.margin_height()) == FIT_PAGE_SIZE_HEIGHT
 
 
