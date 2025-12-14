@@ -1961,6 +1961,23 @@ def test_page_size_fit_no_element():
     assert int(page.margin_width()) == 1
 
 @assert_no_logs
+def test_page_size_fit_one_element():
+    pages = render_pages(
+      """
+      <style>
+      @page { size: fit; }
+      * {margin: 0; padding: 0}
+      div {width: 222px; height: 333px}
+      </style>
+      <div></div>
+      """
+    )
+    assert len(pages) == 1
+    page = pages[0]
+    assert int(page.margin_width()) == 222 + 1
+    assert int(page.margin_height()) == 333 + 1
+
+@assert_no_logs
 def test_page_size_fit_no_page_break_before():
     pages = render_pages(
       """

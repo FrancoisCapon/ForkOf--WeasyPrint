@@ -277,8 +277,24 @@ class Document:
     @classmethod
     def _get_page_fit_size(cls, body):
         width = height = 0
-        for element in body.element.iter():
-            print(element)
+        boxes = body.descendants()
+        # first descendants is himself!
+        next(boxes)
+        for box in boxes:
+            width = max(width, box.position_x + box.width)
+            height = max(height, box.position_y + box.height)
+            print(box, width, height)
+        # print(type(body))
+        # print(body.position_x, body.position_y,body.width, body.height)
+        # print(body.__dict__)
+        # if body.children:
+        #     print(body.children[0].width, body.children[0].position_y)
+        #     print(body.children[0].width, body.children[1].position_y)
+        #     print()
+        # for element in body.element.iter():
+        #     #print(element.x, element.y, element.width, element.heigth)
+        #     #print(element.position_x)
+        #     pass
         # avoid content "null" (1px css = 0,26 mm)
         return width + 1, height + 1
 
@@ -296,8 +312,6 @@ class Document:
         context = cls._build_layout_context(
             html, font_config, counter_style, color_profiles, options
         )
-
-        print(options)
 
         root_box = build_formatting_structure(
             html.etree_element,
@@ -324,7 +338,6 @@ class Document:
                 )
                 html_etree_head = html.etree_element.find("head")
                 html_etree_head.append(disabled_page_break_element)
-                print(ElementTree.tostring(html.etree_element))
                 # again without page break
                 context = cls._build_layout_context(
                     html, font_config, counter_style, color_profiles, options
@@ -360,30 +373,6 @@ class Document:
             page_width, page_height = cls._get_page_fit_size(page_body)
             rendering.pages[0]._page_box.width = page_width
             rendering.pages[0]._page_box.height = page_height
-            #print("wxh", page_width, page_height)
-            # print(rendering.__dict__)
-            # print(rendering.pages[0].__dict__)
-            # print(rendering.pages[0]._page_box)
-            # print(rendering.pages[0]._page_box.all_children())
-            # print(rendering.pages[0]._page_box.children[0])
-            # print(rendering.pages[0]._page_box.children[0].position_x)
-            # print(rendering.pages[0]._page_box.children[0].position_y)
-            # print(rendering.pages[0]._page_box.children[0].width)
-            # print(rendering.pages[0]._page_box.children[0].height)
-            # print(rendering.pages[0]._page_box.children[0].children[0])
-            # print(rendering.pages[0]._page_box.children[0].children[0].position_x)
-            # print(rendering.pages[0]._page_box.children[0].children[0].position_y)
-            # print(rendering.pages[0]._page_box.children[0].children[0].width)
-            # print(rendering.pages[0]._page_box.children[0].children[0].height)
-            # print(rendering.pages[0]._page_box.children[0].children[0].all_children())
-        # 0 0 37800 30.0
-        # changer les dimensions de la page
-        # rendering.pages[0]._page_box.height = 100
-        # rendering.pages[0]._page_box.width = 200
-
-        # print(rendering._html.__dict__)
-        # print(rendering._html.etree_element)
-        # print(rendering._html.etree_element.tag)
         rendering._html = html
         return rendering
 
