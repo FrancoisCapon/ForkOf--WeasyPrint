@@ -2039,7 +2039,7 @@ def test_page_size_fit_one_element_with_page_margins():
     assert int(page.height) == 22 + 200 + 44 + 1
 
 @assert_no_logs
-def test_page_size_fit_complexe_page_1():
+def test_page_size_fit_page_border_box():
     pages = render_pages(
       """
       <style>
@@ -2058,13 +2058,13 @@ def test_page_size_fit_complexe_page_1():
     assert int(page.height) == 22 + 10 + 200 + 10 + 44 + 1
 
 @assert_no_logs
-def test_page_size_fit_complexe_page_2():
+def test_page_size_fit_page_content_box():
     pages = render_pages(
       """
       <style>
       @page { size: fit; margin-left: 11px; margin-top: 22px; margin-right: 33px; margin-bottom: 44px}
       * {margin: 0; padding: 0}
-      div {width: 100px; height: 200px; margin: 10px; padding: 7px; box-sizing: content-box;}
+      div {width: 100px; height: 200px; margin: 10px; padding: 7px; border: 3px;box-sizing: content-box;}
       </style>
       <body>
       <div></div>
