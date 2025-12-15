@@ -128,7 +128,7 @@ PAGE_SIZES["fit"] = (
     Dimension(FIT_PAGE_SIZE_HEIGHT, FIT_PAGE_SIZE_UNIT),
 )
 
-# In "portrait" orientation.
+# In "portrait" orientation or square.
 assert all(width.value <= height.value for width, height in PAGE_SIZES.values())
 
 INITIAL_PAGE_SIZE = PAGE_SIZES["a4"]
