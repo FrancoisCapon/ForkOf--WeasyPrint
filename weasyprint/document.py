@@ -284,10 +284,9 @@ class Document:
         # first descendants is himself!
         for box in boxes:
             box_tag = getattr(box, "element_tag", None)
-            if box_tag not in ['body', 'style']:
+            if box_tag not in ['body', 'style', 'meta', 'script']:
                 width = max(width, box.position_x + box.width)
                 height = max(height, box.position_y + box.height)
-                print(type(box), box_tag, box.position_x, box.position_y, width, height)
         # avoid content "null" (1px css = 0,26 mm)
         # add
         print() 
@@ -322,7 +321,6 @@ class Document:
 
         page_boxes, page_boxes_1, page_boxes_2 = itertools.tee(page_boxes, 3)
         is_page_size_fit = cls._is_first_page_size_fit(page_boxes_2)
-        #print(is_page_size_fit)
         # pages_number > 1
         if sum(1 for _ in page_boxes_1) > 1:
             # @page size fit
