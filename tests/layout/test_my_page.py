@@ -2137,6 +2137,16 @@ def test_page_size_fit_one_cant_disabled_more_than_one_page():
       )
     assert "page size fit" in str(value_error.value)
 
+@assert_no_logs
+def test_page_size_square():
+      pages = render_pages(
+        """
+        <style>
+        @page { size: 50px 50px; }
+        </style>
+        """
+      )
+
 # 96px / in 1 px = 1/96 in = 0,026458 cm
 # 1 in (pouce) = 96 px CSS = 2.54 cm
 
