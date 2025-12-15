@@ -276,8 +276,10 @@ class Document:
         return True
 
     @classmethod
-    def _get_page_fit_size(cls, body):
+    def _get_page_fit_size(cls, page):
         width = height = 0
+        page_box = page._page_box
+        body = page_box.children[0].children[0]
         boxes = body.descendants()
         # first descendants is himself!
         for box in boxes:
@@ -289,7 +291,7 @@ class Document:
         # avoid content "null" (1px css = 0,26 mm)
         # add
         print() 
-        return width + 1, height + 1
+        return width + 1 + page_box.margin_right, height + 1 + page_box.margin_bottom
 
     @classmethod
     def _render(cls, html, font_config, counter_style, color_profiles, options):
@@ -363,8 +365,8 @@ class Document:
         )
 
         if is_page_size_fit:
-            page_body = rendering.pages[0]._page_box.children[0].children[0]
-            page_width, page_height = cls._get_page_fit_size(page_body)
+            page = rendering.pages[0]
+            page_width, page_height = cls._get_page_fit_size(page)
             rendering.pages[0]._page_box.width = page_width
             rendering.pages[0]._page_box.height = page_height
         rendering._html = html
