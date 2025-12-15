@@ -285,8 +285,9 @@ class Document:
         for box in boxes:
             box_tag = getattr(box, "element_tag", None)
             if box_tag not in ['body', 'style', 'meta', 'script']:
-                width = max(width, box.position_x + box.width)
-                height = max(height, box.position_y + box.height)
+                width = max(width, box.position_x + box.padding_left + box.width + box.padding_right)
+                height = max(height, box.position_y + box.padding_top + box.height + box.padding_bottom)
+            print(box, box.position_x, box.padding_left)
         # +1 : avoid content "null" (1px css = 0,26 mm)
         # +1 : “avoid calculation errors 
         return width + page_box.margin_right + 1, height + page_box.margin_bottom + 1
