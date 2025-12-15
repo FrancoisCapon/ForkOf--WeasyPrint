@@ -77,6 +77,8 @@ def test_line_breaking_nbsp():
     ''')
     html, = page.children
     body, = html.children
+    #FC
+    print(body.children)
     line_1, line_2 = body.children
     assert line_1.children[0].text == 'a '
     assert line_1.children[1].children[0].text == 'b'

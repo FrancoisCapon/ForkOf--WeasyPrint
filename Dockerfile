@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 # COPY . .
 
-RUN pip install pytest
+RUN pip install pytest pytest-xdist
 RUN pip install --user --no-cache-dir -e .
 
 CMD ["/bin/bash"]
