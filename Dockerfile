@@ -7,11 +7,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpango-1.0-0 libpango1.0-dev \
     libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev \
     libffi-dev libglib2.0-0 libglib2.0-dev \
+    fonts-dejavu \
+    fonts-dejavu-extra \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-# COPY . .
+COPY . .
 
 RUN pip install pytest pytest-xdist
 RUN pip install --user --no-cache-dir -e .
@@ -22,3 +24,10 @@ CMD ["/bin/bash"]
 # docker run -v .:/app -it shipd/weasyprint:lab-01
 # docker run -v .:/app shipd/weasyprint:lab-01 pytest
 # docker run -v .:/app -it shipd/weasyprint:lab-01 pytest tests/layout/test_page.py
+
+# docker run -v .:/app -it shipd/weasyprint:lab-01 pytest
+# 5 failed, 3854 passed, 40 xfailed, 1 xpassed in 56.20s
+
+# docker run -v .:/app -it shipd/weasyprint:lab-01 pytest -n auto
+# 5 failed, 3854 passed, 40 xfailed, 1 xpassed in 17.73s
+
