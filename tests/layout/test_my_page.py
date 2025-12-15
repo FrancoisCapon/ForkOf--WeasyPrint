@@ -2097,6 +2097,31 @@ def test_page_size_fit_page_multidiv_1():
     assert int(page.width) == 11 + 10 + 3 + 7 + 10 + 3 + 7 + 100 + 7 + 3 + 10 + 33 + 1
     assert int(page.height) == 22 + (10 + 3 + 7 + 200 + 7 + 3 + 10) * 2 + 10 + 3 + 7 + 200 + 7 + 3 + 10 + 44 + 1
 
+@assert_no_logs
+def test_page_size_fit_page_multidiv_2():
+    pages = render_pages(
+      """
+      <style>
+      @page { size: fit; margin-left: 11px; margin-top: 22px; margin-right: 33px; margin-bottom: 44px}
+      * {margin: 0; padding: 0}
+      section {width: 100px; height: 200px; margin: 10px; padding: 7px; border: 3px solid;box-sizing: content-box;}
+      div.one {width: 555px; height: 200px;position: absolute; top:333px; left: 0}
+      div.two {width: 50px; height: 666px;position: absolute; top:333px; left: 55px}
+      </style>
+      <body>
+      <section></section>
+      <div class="one"></div>
+       <div class="two"></div>
+      <section></section>
+      <section><section></section></section>
+      </body>
+      """
+    )
+    assert len(pages) == 1
+    page = pages[0]
+    assert int(page.width) == 11 + 555 + 33 + 1
+    assert int(page.height) == 22 + 333 + 666 + 44 + 1
+
 # 96px / in 1 px = 1/96 in = 0,026458 cm
 # 1 in (pouce) = 96 px CSS = 2.54 cm
 

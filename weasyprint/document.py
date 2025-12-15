@@ -287,7 +287,7 @@ class Document:
             if box_tag not in ['body', 'style', 'meta', 'script']:
                 width = max(width, box.position_x + box.margin_width())
                 height = max(height, box.position_y + box.margin_height())
-                print(box, box.position_x, box.margin_left, box.border_left_width, box.padding_left,  box.border_width(), box.margin_width(), page_box.margin_right)
+                # print(box, box.position_x, box.margin_left, box.border_left_width, box.padding_left,  box.border_width(), box.margin_width(), page_box.margin_right)
         # +1 : avoid content "null" (1px css = 0,26 mm)
         # +1 : “avoid calculation errors 
         return width + page_box.margin_right + 1, height + page_box.margin_bottom + 1
