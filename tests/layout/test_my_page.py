@@ -2055,7 +2055,7 @@ def test_page_size_fit_complexe_page_1():
     assert len(pages) == 1
     page = pages[0]
     assert int(page.width) == 11 + 10 + 100 + 10 + 33 + 1
-    assert int(page.height) == 22 + 200 + 44 + 1
+    assert int(page.height) == 22 + 10 + 200 + 10 + 44 + 1
 
 @assert_no_logs
 def test_page_size_fit_complexe_page_2():
