@@ -2064,7 +2064,7 @@ def test_page_size_fit_complexe_page_2():
       <style>
       @page { size: fit; margin-left: 11px; margin-top: 22px; margin-right: 33px; margin-bottom: 44px}
       * {margin: 0; padding: 0}
-      div {width: 100px; height: 200px; margin: 0px; padding: 7px; box-sizing: content-box;}
+      div {width: 100px; height: 200px; margin: 10px; padding: 7px; box-sizing: content-box;}
       </style>
       <body>
       <div></div>
@@ -2073,8 +2073,8 @@ def test_page_size_fit_complexe_page_2():
     )
     assert len(pages) == 1
     page = pages[0]
-    assert int(page.width) == 11 + 10 + 7 + 100 + +7 + 33 + 1
-    assert int(page.height) == 22 + 200 + 44 + 1
+    assert int(page.width) == 11 + 10 + 7 + 100 + 7 + 10 + 33 + 1
+    assert int(page.height) == 22 + 10 + 7 + 200 + 7 + 10 + 44 + 1
 
 # 96px / in 1 px = 1/96 in = 0,026458 cm
 # 1 in (pouce) = 96 px CSS = 2.54 cm
