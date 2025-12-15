@@ -2135,7 +2135,7 @@ def test_page_size_fit_one_cant_disabled_more_than_one_page():
         <div style="break-before: page !important"></div>
         """
       )
-    assert 
+    assert "page size fit" in str(value_error.value)
 
 # 96px / in 1 px = 1/96 in = 0,026458 cm
 # 1 in (pouce) = 96 px CSS = 2.54 cm
